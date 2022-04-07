@@ -53,6 +53,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
         return
       }
       if (stderr) {
+        console.log(`stdout: ${stdout}`)
         console.log(`stderr: ${stderr}`)
         return
       }
