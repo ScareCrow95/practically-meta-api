@@ -36,15 +36,7 @@ app.get('/', (req, res) => {
 
 app.post('/upload', upload.single('file'), function (req, res) {
   console.log(req.file.originalname)
-  //   res.json({
-  //     Cheeks_Puff: 0.35,
-  //     Eye_asian: 0.344,
-  //     Eyebrow_Uni: 0.04,
-  //     Eyebrow_thin: 0.09,
-  //     Mouth_size: 0.43,
-  //     Nose_Fat: 0.8698,
-  //     Nose_size: 0.5488,
-  //   })
+
   exec(
     `./exec.sh ../images/${req.file.originalname}`,
     (error, stdout, stderr) => {
@@ -52,12 +44,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
         console.log(`error: ${error.message}`)
         return
       }
-      if (stderr) {
-        console.log(`stdout: ${stdout}`)
-        console.log(`stderr: ${stderr}`)
-        return
-      }
-      console.log(`stdout: ${stdout}`)
+      console.log(`[EXEC COMMAND] stdout: ${stdout}`)
       exec('rm ./images/*', (err, out, serr) => {
         res.json(JSON.stringify(stdout))
       })
