@@ -45,9 +45,7 @@ app.post('/upload', upload.single('file'), function (req, res) {
         return
       }
       console.log(`[EXEC COMMAND] stdout: ${stdout}`)
-      exec('rm ./images/*', (err, out, serr) => {
-        res.json(JSON.stringify(stdout))
-      })
+      res.json(JSON.parse(stdout))
     }
   )
 })
