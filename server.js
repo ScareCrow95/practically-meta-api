@@ -24,7 +24,7 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(json())
 
-app.listen(4000, () => {
+app.listen(5000, () => {
   console.log('Server running on port 4000')
 })
 
@@ -34,16 +34,19 @@ app.get('/', (req, res) => {
 
 app.post('/upload', upload.single('file'), function (req, res) {
   console.log(req.file.originalname)
-  exec('ls', (error, stdout, stderr) => {
-    if (error) {
-      console.log(`error: ${error.message}`)
-      return
+  exec(
+    `python3 ./scripts/infer.py ${req.file.originalname}`,
+    (error, stdout, stderr) => {
+      if (error) {
+        console.log(`error: ${error.message}`)
+        return
+      }
+      if (stderr) {
+        console.log(`stderr: ${stderr}`)
+        return
+      }
+      console.log(`stdout: ${stdout}`)
     }
-    if (stderr) {
-      console.log(`stderr: ${stderr}`)
-      return
-    }
-    console.log(`stdout: ${stdout}`)
-  })
+  )
   res.json({})
 })
