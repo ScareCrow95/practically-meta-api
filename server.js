@@ -24,8 +24,10 @@ app.use(cors())
 app.use(morgan('dev'))
 app.use(json())
 
-app.listen(5000, () => {
-  console.log('Server running on port 4000')
+const port = 5000
+
+app.listen(port, () => {
+  console.log(`Server running on port ${port}`)
 })
 
 app.get('/', (req, res) => {
@@ -35,7 +37,7 @@ app.get('/', (req, res) => {
 app.post('/upload', upload.single('file'), function (req, res) {
   console.log(req.file.originalname)
   exec(
-    `python3 ./scripts/infer.py ${req.file.originalname}`,
+    `python3 ./scripts/infer.py ./images/${req.file.originalname}`,
     (error, stdout, stderr) => {
       if (error) {
         console.log(`error: ${error.message}`)
@@ -46,7 +48,9 @@ app.post('/upload', upload.single('file'), function (req, res) {
         return
       }
       console.log(`stdout: ${stdout}`)
+      exec('rm ./images/*', (err, out, serr) => {
+        res.json(JSON.stringify(stdout))
+      })
     }
   )
-  res.json({})
 })
